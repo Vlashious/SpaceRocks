@@ -1,0 +1,2 @@
+# Space Rocks project
+Godot 3.2.3 project for arcade game called Space Rocks. This project is from book "Godot Game Engine Development Projects: Build five cross-platform 2D and 3D games with Godot 3.0
