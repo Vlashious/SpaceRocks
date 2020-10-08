@@ -12,6 +12,13 @@ public class Main : Node
     private void _on_Player_ShootSignal(PackedScene scene, Vector2 pos, float rot)
     {
         var b = scene.Instance() as Bullet;
+        if (b == null)
+        {
+            var enemyBullet = scene.Instance() as EnemyBullet;
+            enemyBullet.Start(pos, rot);
+            AddChild(enemyBullet);
+            return;
+        }
         b.Start(pos, rot);
         AddChild(b);
     }
@@ -53,7 +60,6 @@ public class Main : Node
 
     private async void NewGame()
     {
-        GD.Print("heh");
         foreach (Rock rock in GetNode<Node>("Rocks").GetChildren())
         {
             rock.QueueFree();
@@ -107,8 +113,8 @@ public class Main : Node
         var e = _enemy.Instance() as Enemy;
         AddChild(e);
         e.Target = GetNode<Player>("Player");
-        e.Connect("Shoot", this, "_on_Player_shoot");
-        GetNode<Timer>("EnemyTimer").WaitTime = (float)GD.RandRange(2, 5);
+        e.Connect("ShootSignal", this, "_on_Player_ShootSignal");
+        GetNode<Timer>("EnemyTimer").WaitTime = (float)GD.RandRange(10, 20);
         GetNode<Timer>("EnemyTimer").Start();
     }
     public override void _Input(InputEvent inputEvent)

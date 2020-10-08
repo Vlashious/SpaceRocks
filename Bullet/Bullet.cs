@@ -32,4 +32,12 @@ public class Bullet : Area2D
             QueueFree();
         }
     }
+    private void _on_Bullet_area_entered(Area2D area)
+    {
+        if (area is Enemy e)
+        {
+            e.TakeDamage(1);
+        }
+        QueueFree();
+    }
 }
