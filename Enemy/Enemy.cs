@@ -51,6 +51,7 @@ public class Enemy : Area2D
 
     private void Explode()
     {
+        GetNode<AudioStreamPlayer2D>("ExplodeSound").Play();
         _speed = 0;
         GetNode<Timer>("GunTimer").Stop();
         GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true;
@@ -72,6 +73,7 @@ public class Enemy : Area2D
         var dir = Target.GlobalPosition - GlobalPosition;
         dir = dir.Rotated((float)GD.RandRange(-0.1, 0.1));
         EmitSignal("ShootSignal", _bullet, GlobalPosition, dir.Angle());
+        GetNode<AudioStreamPlayer2D>("ShootSound").Play();
     }
     private void _on_Enemy_body_entered(Node body)
     {

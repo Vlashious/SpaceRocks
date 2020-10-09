@@ -60,6 +60,7 @@ public class Main : Node
 
     private async void NewGame()
     {
+        GetNode<AudioStreamPlayer2D>("Music").Play();
         foreach (Rock rock in GetNode<Node>("Rocks").GetChildren())
         {
             rock.QueueFree();
@@ -76,6 +77,7 @@ public class Main : Node
 
     private void NewLevel()
     {
+        GetNode<AudioStreamPlayer2D>("LevelUpSound").Play();
         _level++;
         GetNode<HUD>("HUD").ShowMessage($"Wave {_level}");
         GetNode<Timer>("EnemyTimer").WaitTime = (float)GD.RandRange(5, 8);
@@ -85,6 +87,7 @@ public class Main : Node
 
     private void GameOver()
     {
+        GetNode<AudioStreamPlayer2D>("Music").Stop();
         _isPlaying = false;
         GetNode<HUD>("HUD").GameOver();
     }
@@ -99,6 +102,7 @@ public class Main : Node
 
     private void _on_Rock_exploded(int size, int radius, Vector2 pos, Vector2 vel)
     {
+        GetNode<AudioStreamPlayer2D>("ExplodeSound").Play();
         if (size == 1) return;
         foreach (var offset in new int[] { -1, 1 })
         {

@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/player_ship.png" type="Texture" id=1]
 [ext_resource path="res://Player/Player.cs" type="Script" id=2]
 [ext_resource path="res://Bullet/Bullet.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Explosion/Explosion.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/sounds/synthetic_laser.ogg" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/flight_sound.ogg" type="AudioStream" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 33.7125
@@ -20,7 +22,7 @@ __meta__ = {
 _enginePower = 500
 _spinPower = 15000
 _bullet = ExtResource( 3 )
-_fireRate = 0.1
+_fireRate = 0.2
 
 [node name="Sprite" type="Sprite" parent="."]
 rotation = 1.5708
@@ -42,6 +44,14 @@ autostart = true
 [node name="InvulnerabilityTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="LaserSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+volume_db = -10.0
+
+[node name="EngineSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+volume_db = -10.0
 [connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
 [connection signal="timeout" from="GunTimer" to="." method="_on_GunTimer_timeout"]
 [connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_InvulnerabilityTimer_timeout"]

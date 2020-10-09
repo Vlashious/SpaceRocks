@@ -99,7 +99,12 @@ public class Player : RigidBody2D
         if (Input.IsActionPressed("thrust"))
         {
             _thrust = new Vector2(_enginePower, 0);
+            if (!GetNode<AudioStreamPlayer2D>("EngineSound").Playing)
+            {
+                GetNode<AudioStreamPlayer2D>("EngineSound").Play();
+            }
         }
+        else GetNode<AudioStreamPlayer2D>("EngineSound").Stop();
         _rotationDir = 0;
         if (Input.IsActionPressed("rotate_right"))
         {
@@ -121,6 +126,7 @@ public class Player : RigidBody2D
         EmitSignal("ShootSignal", _bullet, GetNode<Position2D>("Muzzle").GlobalPosition, Rotation);
         _canShoot = false;
         GetNode<Timer>("GunTimer").Start();
+        GetNode<AudioStreamPlayer2D>("LaserSound").Play();
     }
 
     public override void _IntegrateForces(Physics2DDirectBodyState state)
