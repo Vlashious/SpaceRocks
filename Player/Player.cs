@@ -98,13 +98,18 @@ public class Player : RigidBody2D
         if (_state == State.DEAD || _state == State.INIT) return;
         if (Input.IsActionPressed("thrust"))
         {
+            GetNode<Particles2D>("Exhaust").Emitting = true;
             _thrust = new Vector2(_enginePower, 0);
             if (!GetNode<AudioStreamPlayer2D>("EngineSound").Playing)
             {
                 GetNode<AudioStreamPlayer2D>("EngineSound").Play();
             }
         }
-        else GetNode<AudioStreamPlayer2D>("EngineSound").Stop();
+        else
+        {
+            GetNode<Particles2D>("Exhaust").Emitting = false;
+            GetNode<AudioStreamPlayer2D>("EngineSound").Stop();
+        }
         _rotationDir = 0;
         if (Input.IsActionPressed("rotate_right"))
         {
