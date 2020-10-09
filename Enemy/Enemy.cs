@@ -79,7 +79,7 @@ public class Enemy : Area2D
     {
         if (body is Player p)
         {
-            return;
+            p.Shields -= 50;
         }
         Explode();
     }

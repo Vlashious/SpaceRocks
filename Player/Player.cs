@@ -6,6 +6,7 @@ public class Player : RigidBody2D
     [Signal] delegate void ShootSignal(PackedScene scene, Vector2 pos, float rot);
     [Signal] delegate void LivesChanged(int val);
     [Signal] delegate void Dead();
+    [Signal] delegate void ShieldChanged(float percentage);
     public enum State
     {
         INIT,
@@ -16,19 +17,18 @@ public class Player : RigidBody2D
     private State _state;
     private CollisionShape2D _collision;
     private Sprite _sprite;
-    [Export]
-    private int _enginePower;
-    [Export]
-    private int _spinPower;
-    [Export]
-    private PackedScene _bullet;
-    [Export]
-    private float _fireRate;
+    [Export] private int _enginePower;
+    [Export] private int _spinPower;
+    [Export] private PackedScene _bullet;
+    [Export] private float _fireRate;
+    [Export] private int _maxShield;
+    [Export] private float _shieldRegen;
     private Vector2 _thrust;
     private float _rotationDir;
     private Vector2 _screenSize;
     private bool _canShoot;
     private int _lives;
+    private float _shield;
     public int Lives
     {
         private get
@@ -38,7 +38,28 @@ public class Player : RigidBody2D
         set
         {
             _lives = value;
+            Shields = _maxShield;
             EmitSignal("LivesChanged", _lives);
+        }
+    }
+    public float Shields
+    {
+        get
+        {
+            return _shield;
+        }
+        set
+        {
+            if (value > _maxShield)
+            {
+                value = _maxShield;
+            }
+            _shield = value;
+            EmitSignal("ShieldChanged", _shield * 100 / _maxShield);
+            if (_shield < 0)
+            {
+                Lives -= 1;
+            }
         }
     }
 
@@ -57,6 +78,7 @@ public class Player : RigidBody2D
     }
     public void Start()
     {
+        Shields = _maxShield;
         GetNode<Sprite>("Sprite").Show();
         Lives = 3;
         ChangeState(State.INV);
@@ -89,6 +111,7 @@ public class Player : RigidBody2D
     }
     public override void _Process(float delta)
     {
+        Shields += _shieldRegen * delta;
         GetInput();
     }
 
@@ -162,6 +185,7 @@ public class Player : RigidBody2D
             r.Explode();
             GetNode<Sprite>("Explosion").Show();
             GetNode<AnimationPlayer>("Explosion/AnimationPlayer").Play("explosion");
+            Shields -= r.Size * 25;
             _lives -= 1;
             if (_lives <= 0)
             {

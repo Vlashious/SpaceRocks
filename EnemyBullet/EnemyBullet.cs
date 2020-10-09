@@ -24,4 +24,12 @@ public class EnemyBullet : Area2D
     {
         QueueFree();
     }
+    private void _on_EnemyBullet_body_entered(Node body)
+    {
+        if (body is Player player)
+        {
+            player.Shields -= 15;
+        }
+        QueueFree();
+    }
 }

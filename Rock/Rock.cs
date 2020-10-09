@@ -5,7 +5,7 @@ public class Rock : RigidBody2D
 {
     [Signal] delegate void Exploded(int size, int radius, Vector2 pos, Vector2 vel);
     private Vector2 _screenSize;
-    private int _size;
+    public int Size { get; private set; }
     private int _radius;
     private float _scaleFactor = 0.2f;
 
@@ -14,7 +14,7 @@ public class Rock : RigidBody2D
         _screenSize = OS.WindowSize;
         GetNode<Sprite>("Explosion").Scale = new Vector2(0.75f, 0.75f) * size;
         Position = pos;
-        _size = size;
+        Size = size;
         Mass = 1.5f * size;
         GetNode<Sprite>("Sprite").Scale = Vector2.One * _scaleFactor * size;
         _radius = (int)(GetNode<Sprite>("Sprite").Texture.GetSize().x / 2 * _scaleFactor * size);
@@ -30,7 +30,7 @@ public class Rock : RigidBody2D
         Layers = 0;
         GetNode<Sprite>("Sprite").Hide();
         GetNode<AnimationPlayer>("Explosion/AnimationPlayer").Play("explosion");
-        EmitSignal("Exploded", _size, _radius, Position, LinearVelocity);
+        EmitSignal("Exploded", Size, _radius, Position, LinearVelocity);
         LinearVelocity = new Vector2();
         AngularVelocity = 0;
     }
